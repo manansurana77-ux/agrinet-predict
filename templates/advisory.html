@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AgriNet-Predict Advisory</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0; padding: 0;
+        }
+        .header {
+            background-color: #2d6a4f;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .nav {
+            background-color: #40916c;
+            padding: 10px;
+            text-align: center;
+        }
+        .nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 20px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .form-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #40916c;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #2d6a4f;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover { background-color: #40916c; }
+        .result {
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .severe { border-left: 5px solid red; }
+        .stable { border-left: 5px solid green; }
+        .warning { border-left: 5px solid orange; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>🌾 AgriNet-Predict</h1>
+    <p>Get Personalized Farmer Advisory</p>
+</div>
+
+<div class="nav">
+    <a href="/">🏠 Dashboard</a>
+    <a href="/prices">📈 Price Trends</a>
+    <a href="/advisory">🔔 Get Advisory</a>
+</div>
+
+<div class="form-container">
+    <h2>Enter Your Market Name</h2>
+    <form method="POST">
+        <input type="text" name="market"
+               placeholder="e.g. Bilsi, Gorakhpur, Ghaziabad"
+               required>
+        <button type="submit">Get Advisory 🔍</button>
+    </form>
+    <p style="color:#666; font-size:13px;">
+        Try: Bilsi, Gorakhpur, Ghaziabad, Bareilly, Fatehpur, Etawah
+    </p>
+</div>
+
+{% if advisory %}
+    {% if advisory.error is defined %}
+        <div class="result warning">
+            <h3>⚠️ {{ advisory.error }}</h3>
+        </div>
+    {% else %}
+        <div class="result">
+            <h2>Advisory for {{ advisory.market }}</h2>
+            <p><strong>Commodity:</strong> Tomato</p>
+            <p><strong>Current Price:</strong>
+               ₹{{ advisory.current_price }}/quintal</p>
+            <p><strong>7-Day Average:</strong>
+               ₹{{ advisory.average_price }}/quintal</p>
+            <p><strong>Price Change:</strong>
+               {{ advisory.price_change }}%</p>
+            <p><strong>Status:</strong>
+               {{ advisory.shock_level }}</p>
+
+            {% if advisory.risk_info %}
+                <div style="background:#fff3cd; padding:15px;
+                            border-radius:8px; margin-top:15px;">
+                    <h3>⚠️ WARNING: Incoming Shock Detected!</h3>
+                    <p>{{ advisory.risk_info.connected_shocked_markets }}
+                       nearby markets are in severe shock</p>
+                    <p>Shock arrives in approximately:
+                       <strong>
+                       {{ advisory.risk_info.estimated_days_until_shock }}
+                       day(s)</strong></p>
+                    <p>Risk Score:
+                       {{ advisory.risk_info.propagation_risk_score }}</p>
+                    <div style="background:#dc3545; color:white;
+                                padding:15px; border-radius:8px;
+                                margin-top:10px; text-align:center;
+                                font-size:20px;">
+                        🚨 ADVISORY: SELL TODAY!<br>
+                        <span style="font-size:14px;">
+                        Price crash expected within
+                        {{ advisory.risk_info.estimated_days_until_shock }}
+                        day(s)</span>
+                    </div>
+                </div>
+            {% else %}
+                <div style="background:#d4edda; padding:15px;
+                            border-radius:8px; margin-top:15px;
+                            text-align:center;">
+                    <h3 style="color:green;">
+                    ✅ No incoming shocks detected</h3>
+                    <p>Your market looks safe. You can hold your produce.</p>
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endif %}
+
+</body>
+</html>

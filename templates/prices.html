@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Price Trends - AgriNet-Predict</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0; padding: 0;
+        }
+        .header {
+            background-color: #2d6a4f;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .nav {
+            background-color: #40916c;
+            padding: 10px;
+            text-align: center;
+        }
+        .nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 20px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .chart-container {
+            background: white;
+            margin: 30px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            max-width: 900px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>🌾 AgriNet-Predict</h1>
+    <p>Tomato Price Trends Across Markets</p>
+</div>
+
+<div class="nav">
+    <a href="/">🏠 Dashboard</a>
+    <a href="/prices">📈 Price Trends</a>
+    <a href="/advisory">🔔 Get Advisory</a>
+</div>
+
+<div class="chart-container">
+    <div id="chart"></div>
+</div>
+
+<script>
+    var chart = {{ chart | safe }};
+    Plotly.newPlot('chart', chart.data, chart.layout);
+</script>
+
+</body>
+</html>
